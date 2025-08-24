@@ -10,9 +10,7 @@ main().catch((err) => console.log(err));
 
 // connecting to the mongodb Server
 async function main() {
-  await mongoose.connect(
-    "mongodb+srv://aysingh0016:8if4KDTNjYxePqUB@cluster0.o7pbj9u.mongodb.net/todo-sample"
-  );
+  await mongoose.connect();
 }
 
 const app = express();

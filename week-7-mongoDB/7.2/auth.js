@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-const JWT_SECRET = "secR3t";
+const JWT_SECRET = "";
 
 function auth(req, res, next) {
   const token = req.headers.token;
