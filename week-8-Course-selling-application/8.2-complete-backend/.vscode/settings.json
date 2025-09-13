@@ -1,0 +1,8 @@
+{
+  "editor.fontFamily": "JetBrains Mono, Symbols Nerd Font",
+  "editor.fontWeight": "300",
+  "editor.fontLigatures": true,
+  "editor.fontSize": 17, // tweak size
+  "editor.lineHeight": 1.5, // improves spacing
+  "editor.letterSpacing": 0.5 // makes thin fonts more legible
+}
