@@ -21,8 +21,9 @@ const AdminSchema = new Schema({
 const CourseSchema = new Schema({
   courseId: ObjectId,
   adminId: ObjectId,
-  imgUrl: String,
-  decription: String,
+  title: String,
+  description: String,
+  imageURL: String,
   price: Number,
 });
 
@@ -30,6 +31,8 @@ const PurchasesSchema = new Schema({
   adminId: ObjectId,
   userId: ObjectId,
 });
+
+// create a schema for the course content -> like video1, video2, video3, assignments, etc.,
 
 const UserModel = mongoose.model("user", UserSchema);
 const AdminModel = mongoose.model("admin", AdminSchema);
@@ -41,4 +44,5 @@ module.exports = {
   AdminModel,
   CourseModel,
   PurchaseModel,
+  ObjectId,
 };

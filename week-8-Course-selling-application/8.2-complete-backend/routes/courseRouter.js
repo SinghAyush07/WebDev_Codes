@@ -1,12 +1,53 @@
 const { Router } = require("express");
 const courseRouter = Router();
-const { CourseModel } = require("../db");
+const { PurchaseModel, CourseModel } = require("../db");
+const { userMiddleware } = require("../middleware/userMiddleware");
 
-courseRouter.post("/course", function (req, res) {});
+// no need to authenticate the preview
+courseRouter.get("/preview", async function (req, res) {
+  const courses = await CourseModel.find({});
 
-courseRouter.put("/course", function (req, res) {});
+  res.json({
+    courses: courses,
+  });
+});
 
-courseRouter.get("/preview", function (req, res) {});
+// need auth before purchasing
+courseRouter.use(userMiddleware);
+// purchase the course
+courseRouter.post("/purchase", async function (req, res) {
+  const userId = req.userId;
+  const courseId = req.body.courseId;
+
+  // check the user have paid the price
+  const checkPurcases = await PurchaseModel.findOne({
+    userId,
+    courseId,
+  });
+  if (checkPurcases) {
+    res.json({
+      msg: "user already have the course",
+    });
+  }
+  await PurchaseModel.create({
+    userId,
+    courseId,
+  });
+  res.json({
+    msg: "you have successfully bought the course",
+  });
+});
+
+// all purchases course
+courseRouter.get("/purchases", async function (req, res, next) {
+  const userId = userId;
+  const purchases = await PurchaseModel.find({
+    userId,
+  });
+  res.json({
+    purchases,
+  });
+});
 
 module.exports = {
   courseRouter: courseRouter,

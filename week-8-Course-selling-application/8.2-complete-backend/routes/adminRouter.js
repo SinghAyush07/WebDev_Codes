@@ -1,12 +1,13 @@
 const { Router } = require("express");
 const adminRouter = Router();
-const { AdminModel } = require("../db");
+const { AdminModel, CourseModel } = require("../db");
 const { adminMiddleware } = require("../middleware/adminMiddleware");
 const { JWT_ADMIN_PASSWORD } = require("../config");
 const z = require("zod");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+// input validation using zod
 const AdminSignupZ = z.object({
   email: z.email(),
   firstName: z.string(),
@@ -27,6 +28,7 @@ const AdminSignupZ = z.object({
       message: "Password must contain at least one special character",
     }),
 });
+
 adminRouter.post("/signup", async function (req, res) {
   try {
     const adminValid = AdminSignupZ.safeParse(req.body);
@@ -88,11 +90,77 @@ adminRouter.post("/signin", async function (req, res) {
 
 adminRouter.use(adminMiddleware);
 
-adminRouter.post("/course", function (req, res) {});
+adminRouter.post("/course", async function (req, res) {
+  try {
+    const adminId = req.adminId;
 
-adminRouter.put("/course", function (req, res) {});
+    const { title, description, imageURL, price } = req.body;
+    console.log(description);
+    const course = await CourseModel.create({
+      adminId: adminId,
+      title: title,
+      description: description,
+      imageURL: imageURL,
+      price: price,
+    });
 
-adminRouter.get("/course/bulk", function (req, res) {});
+    res.json({
+      msg: "course created",
+      courseId: course._id,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      msg: "some bug is there",
+    });
+  }
+});
+
+adminRouter.put("/course", async function (req, res) {
+  const adminId = req.adminId;
+  const { title, description, price, imageURL, courseId } = req.body;
+  try {
+    const checkAdmin = await CourseModel.findOne({
+      adminId: adminId,
+      _id: courseId,
+    });
+    console.log(checkAdmin);
+    if (!checkAdmin) {
+      res.json({
+        msg: "course does not exist",
+      });
+    }
+    await CourseModel.updateOne(
+      {
+        _id: courseId,
+        adminId: adminId,
+      },
+      {
+        title: title,
+        description: description,
+        imgUrl: imageURL,
+        price: price,
+      }
+    );
+    res.json({
+      msg: "updated",
+    });
+  } catch (err) {
+    res.json({
+      msg: err,
+    });
+  }
+});
+
+adminRouter.get("/course/bulk", async function (req, res) {
+  const adminId = req.adminId;
+  const course = await CourseModel.find({
+    adminId: adminId,
+  });
+  res.json({
+    course: course,
+  });
+});
 
 module.exports = {
   adminRouter: adminRouter,
