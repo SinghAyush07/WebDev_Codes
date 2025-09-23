@@ -30,8 +30,8 @@ courseRouter.post("/purchase", async function (req, res) {
     });
   }
   await PurchaseModel.create({
-    userId,
-    courseId,
+    userId: userId,
+    courseId: courseId,
   });
   res.json({
     msg: "you have successfully bought the course",
@@ -40,7 +40,7 @@ courseRouter.post("/purchase", async function (req, res) {
 
 // all purchases course
 courseRouter.get("/purchases", async function (req, res, next) {
-  const userId = userId;
+  const userId = req.userId;
   const purchases = await PurchaseModel.find({
     userId,
   });

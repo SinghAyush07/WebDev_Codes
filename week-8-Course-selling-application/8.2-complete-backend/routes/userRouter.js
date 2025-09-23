@@ -115,7 +115,7 @@ userRouter.get("/purchases", async function (req, res) {
     _id: { $in: purchases.map((x) => x.courseId) },
   });
   res.json({
-    courseData,
+    courseData: courseData,
   });
 });
 

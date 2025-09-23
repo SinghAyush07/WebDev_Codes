@@ -28,8 +28,8 @@ const CourseSchema = new Schema({
 });
 
 const PurchasesSchema = new Schema({
-  adminId: ObjectId,
   userId: ObjectId,
+  courseId: ObjectId,
 });
 
 // create a schema for the course content -> like video1, video2, video3, assignments, etc.,
